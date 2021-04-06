@@ -1,0 +1,56 @@
+-- Script to automatically read KM200 data, and add it to sensors, or for example set a switch
+-- First configure the URL at which the php scripts(km200-output.php, km200.php, km200-set.php) are added.
+-- Change the url on line 19, to reflect where km200-output.php is. It should look like url = 'address/km200-output.php',
+
+return {
+    on = {
+        timer = {
+            'every minute' -- run every minute
+        },
+        httpResponses = {
+            'km200read'
+        }
+    },
+    execute = function(domoticz, item)
+
+        if (item.isTimer) then -- the script is called to request an update from the km200
+            domoticz.log('Processing KM200 URL')
+            domoticz.openURL({
+                url = '192.168.6.244/km200-output.php',
+                method = 'GET',
+                callback = 'km200read', -- Make sure the script is run again once response received.
+            })
+        end
+
+        if (item.isHTTPResponse) then -- The script is run because the HTML data is received
+            if (item.statusCode == 200) then -- The script has received a valid HTML response
+                if (item.isJSON) then
+                    domoticz.log("JSON Data received") -- The script has received JSON data, assumed to contain the expected parameters
+
+                    domoticz.devices('Temp Outside').updateTemperature(item.json.tempoutdoor)
+                    domoticz.devices('Heating input').updateTemperature(item.json.temphc1supply)
+                    domoticz.devices('Hot Water output').updateTemperature(item.json.tempappliancereturn)
+                    domoticz.devices('Hot Water input').updateTemperature(item.json.tempappliancesupply)
+                    domoticz.devices('Hot water target').updateTemperature(item.json.tempappliancesupplysetpoint)
+                    domoticz.devices('Hot Water Temp').updateTemperature(item.json.temphotwater)
+                    domoticz.devices('Temp Thermostat').updateTemperature(item.json.temphc1roomactual)
+                    domoticz.devices('Warmtepomp compressorsnelheid').updatePercentage(item.json.modulationhc1pump)
+                    domoticz.devices('Number of starts').updateCounter(item.json.sysnumberofstarts)
+                    domoticz.devices('Status').updateText(item.json.syshealth)
+                    domoticz.devices('Power Consumption').updateCounter(item.json.syspowerconsumption)
+                    domoticz.devices('Modulation').updatePercentage(item.json.actualModulation)
+                    
+                    
+                else
+                    domoticz.log("Error: no JSON received. Check km200-output.php result in browser.") -- Some other response received; usually PHP errors. Check PHP script output.
+                end
+            
+            else
+                domoticz.log('There was a problem handling the request', domoticz.LOG_ERROR)
+                domoticz.log(item, domoticz.LOG_ERROR)
+            end
+
+        end
+
+    end
+}
