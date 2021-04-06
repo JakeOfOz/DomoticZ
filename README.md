@@ -4,15 +4,14 @@ For (php) scripts in DomoticZ
 I have not created any of the files in this repo, I just combined and edited them to present day versions of firmware, and to work on a Raspberry Pi.
 
 
-Requirements:
+## Requirements:
 1. Raspberry Pi (tested on model 4B, should also work on newer models)
 2. Your Raspberry Pi connected to your local network
 3. Your KM200 device connected to your local network
 4. Working instance of DomoticZ on your Raspberry Pi  (use: "curl -L https://install.domoticz.com | bash" as the easy way to install)
-5. Nginx running on your Raspberry Pi (follow this guide https://www.raspberrypi.org/documentation/remote-access/web-server/nginx.md )
-6. 
+5. Nginx running on your Raspberry Pi, you can follow this guide https://www.raspberrypi.org/documentation/remote-access/web-server/nginx.md
 
-Steps:
+## Setup:
 
 1. place km200.php in your php folder (on my machine it was located in /var/www/html but it might be different on your pi)
   1b. Edit the IP-address and private key in the km200.php file
