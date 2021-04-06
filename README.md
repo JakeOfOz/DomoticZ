@@ -31,5 +31,26 @@ Steps:
   Click on the '+' at the top, and select dzVents > Minimal
   Replace all the content with the content in 'km200-read' of this repo
 
-6. Make sure that the names in the dzVents script correspond with the names given in step 4
+6. Make sure that the names in the dzVents script correspond with the names given in step 4:
+  If your device is named "Outdoor Temp", the line in km200-read should be:
+  domoticz.devices('Outdoor Temp').updateTemperature(item.json.tempoutdoor)
+  
+7. Save the dzVents script and check if the device is updated under Settings > Devices
+
+## Adding devices
+To add values to DomoticZ:
+
+1. In km200-output.php find the value you want to read, and add it to the list:
+    Example: "temphotwater" => km200_GetData("/dhwCircuits/dhw1/actualTemp")->value,
+    MAKE SURE to add the comma at the end, or else the script will not work
+
+2. In Domoticz, go to Settings > Hardware, and at your km200 hardware, click on 'Create Virtual Sensors'
+    Add a device name that is logical, and choose the type of sensor (most used are 'Usage', 'Temperature', 'Percentage' or 'Text')
+    Example: Hot Water Temp, type is 'Temperature'
+
+3. In Domoticz in the dzVents script, add the line to read your new value:
+    Example:domoticz.devices('Hot Water Temp').updateTemperature(item.json.temphotwater)
+    
+This will update the device named 'Hot Water Temp' with the value read from 'temphotwater'
+You should be able to see your hot water temp in Domoticz under the Temperature-tab (and add it to your dashboard from there)
   
