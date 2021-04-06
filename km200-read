@@ -16,7 +16,7 @@ return {
         if (item.isTimer) then -- the script is called to request an update from the km200
             domoticz.log('Processing KM200 URL')
             domoticz.openURL({
-                url = '192.168.6.244/km200-output.php',
+                url = '192.168.xxx.xxx/km200-output.php',
                 method = 'GET',
                 callback = 'km200read', -- Make sure the script is run again once response received.
             })
